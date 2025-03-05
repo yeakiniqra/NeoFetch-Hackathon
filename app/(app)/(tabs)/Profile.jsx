@@ -1,213 +1,80 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 import useAuthStore from '../../../store/useAuthStore';
-import { Ionicons } from '@expo/vector-icons';
 
-export default function Profile() {
-  const { user, userProfile, loading, error, updateUserProfile, fetchUserProfile } = useAuthStore();
-  
-  const [profile, setProfile] = useState({
-    username: '',
-    email: '',
-    semester: '',
-    address: '',
-    contactNo: '',
-    bio: ''
-  });
-  
-  const [isEditing, setIsEditing] = useState(false);
-  
-  // Load profile data when component mounts or when userProfile changes
-  useEffect(() => {
-    if (user && userProfile) {
-      setProfile({
-        username: userProfile.username || user.displayName || '',
-        email: user.email || '',
-        semester: userProfile.semester || '',
-        address: userProfile.address || '',
-        contactNo: userProfile.contactNo || '',
-        bio: userProfile.bio || ''
-      });
-    }
-  }, [user, userProfile]);
+export default function SettingsScreen() {
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-  // Fetch user profile if not available
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (user && !userProfile) {
-        await fetchUserProfile(user.uid);
-      }
-    };
-    
-    loadProfile();
-  }, [user]);
-  
-  const handleSave = async () => {
-    const success = await updateUserProfile({
-      username: profile.username,
-      semester: profile.semester,
-      address: profile.address,
-      contactNo: profile.contactNo,
-      bio: profile.bio
-    });
-    
+  const handleLogout = async () => {
+    const success = await logout();
     if (success) {
-      Alert.alert("Success", "Profile updated successfully");
-      setIsEditing(false);
-    } else {
-      Alert.alert("Error", error || "Failed to update profile");
+      router.push('/login');
     }
-  };
-  
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
   }
-  
-  if (!user) {
-    return (
-      <View className="flex-1 items-center justify-center p-4">
-        <Text className="text-lg">Please log in to view your profile</Text>
-      </View>
-    );
-  }
-  
+
+
+  const menuItems = [
+    { label: 'View Profile', icon: 'person-outline', route: 'profile/UserProfile' },
+    { label: 'Campus Navigation', icon: 'map', route: '/campus-navigation' },
+    { label: 'Order History', icon: 'history', route: 'cafe/OrderHistory' },
+    { label: 'Emergency', icon: 'emergency', route: '/Emergency' },
+    { label: 'About the App', icon: 'info-outline', route: '/About' },
+  ];
+
+
+
   return (
     <ScrollView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="bg-blue-500 pt-12 pb-4 px-4">
-        <View className="flex-row justify-between items-center">
-          <Text className="text-2xl font-bold text-white">Profile</Text>
-          <TouchableOpacity 
-            onPress={() => isEditing ? handleSave() : setIsEditing(true)}
-            className="bg-white rounded-full p-2"
-          >
-            <Ionicons name={isEditing ? "save-outline" : "create-outline"} size={24} color="#3b82f6" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      
-      {/* Profile Picture and Name */}
-      <View className="items-center mt-4">
-        <View className="h-24 w-24 rounded-full bg-gray-300 items-center justify-center mb-2">
+      {/* User Info */}
+      <View className="items-center mt-6">
+        <View className="h-20 w-20 rounded-full bg-gray-300 items-center justify-center mb-2">
           <Text className="text-2xl font-bold text-gray-600">
-            {profile.username ? profile.username.charAt(0).toUpperCase() : "U"}
+            {user?.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
           </Text>
         </View>
-        {isEditing ? (
-          <TextInput
-            className="text-xl font-semibold p-2 border-b border-gray-300 w-64 text-center"
-            value={profile.username}
-            onChangeText={(text) => setProfile({...profile, username: text})}
-            placeholder="Your Name"
-          />
-        ) : (
-          <Text className="text-xl font-semibold">{profile.username || "User"}</Text>
-        )}
-        <Text className="text-gray-500">{profile.email}</Text>
+        <Text className="text-xl font-semibold">{user?.displayName || 'User'}</Text>
+        <Text className="text-gray-500">{user?.email || 'No email provided'}</Text>
       </View>
-      
-      {/* Profile Details */}
-      <View className="p-4 mt-4">
-        <Text className="text-lg font-bold mb-4">Personal Information</Text>
-        
-        {loading ? (
-          <ActivityIndicator size="large" color="#3b82f6" />
-        ) : (
-          <>
-            <ProfileField
-              label="Semester"
-              value={profile.semester}
-              isEditing={isEditing}
-              onChangeText={(text) => setProfile({...profile, semester: text})}
-              placeholder="e.g. 5th Semester"
-              icon="school-outline"
-            />
-            
-            <ProfileField
-              label="Address"
-              value={profile.address}
-              isEditing={isEditing}
-              onChangeText={(text) => setProfile({...profile, address: text})}
-              placeholder="Your address"
-              icon="location-outline"
-            />
-            
-            <ProfileField
-              label="Contact No"
-              value={profile.contactNo}
-              isEditing={isEditing}
-              onChangeText={(text) => setProfile({...profile, contactNo: text})}
-              placeholder="Your phone number"
-              icon="call-outline"
-              keyboardType="phone-pad"
-            />
-            
-            <ProfileField
-              label="Bio"
-              value={profile.bio}
-              isEditing={isEditing}
-              onChangeText={(text) => setProfile({...profile, bio: text})}
-              placeholder="Tell us about yourself"
-              icon="information-circle-outline"
-              multiline={true}
-            />
-          </>
-        )}
-      </View>
-      
-      {/* Save Button for Mobile UX */}
-      {isEditing && (
-        <View className="p-4">
-          <TouchableOpacity 
-            onPress={handleSave}
-            className="bg-blue-500 p-4 rounded-lg items-center"
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text className="text-white font-bold">Save Changes</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      )}
-      
-      {error && (
-        <Text className="text-red-500 p-4 text-center">{error}</Text>
-      )}
-      
-      <View className="h-20" />
-    </ScrollView>
-  );
-}
 
-// Helper component for profile fields
-const ProfileField = ({ label, value, isEditing, onChangeText, placeholder, icon, keyboardType = "default", multiline = false }) => {
-  return (
-    <View className="mb-6">
-      <View className="flex-row items-center mb-1">
-        <Ionicons name={icon} size={18} color="#6b7280" />
-        <Text className="text-gray-500 ml-2">{label}</Text>
+      {/* Menu Options */}
+      <View className="p-4 mt-6">
+        {menuItems.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            className="flex-row items-center p-4 bg-gray-100 rounded-lg mb-3"
+            onPress={() => router.push(item.route)}
+          >
+            <MaterialIcons name={item.icon} size={24} color="#3b82f6" />
+            <Text className="text-lg ml-4">{item.label}</Text>
+          </TouchableOpacity>
+        ))}
+
+        {/* Notification Toggle */}
+        <View className="flex-row items-center justify-between p-4 bg-gray-100 rounded-lg mt-3">
+          <View className="flex-row items-center">
+            <MaterialIcons name="notifications-none" size={24} color="#3b82f6" />
+            <Text className="text-lg ml-4">Notifications</Text>
+          </View>
+          <Switch
+            value={notificationsEnabled}
+            onValueChange={() => setNotificationsEnabled(!notificationsEnabled)}
+          />
+        </View>
       </View>
-      
-      {isEditing ? (
-        <TextInput
-          className={`bg-gray-100 p-3 rounded-lg ${multiline ? 'h-24 text-top' : ''}`}
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          keyboardType={keyboardType}
-          multiline={multiline}
-        />
-      ) : (
-        <Text className="p-3 bg-gray-50 rounded-lg">
-          {value || `No ${label.toLowerCase()} provided`}
-        </Text>
-      )}
-    </View>
+      {/* Logout Button */}
+      <View className="p-4 mt-6">
+        <TouchableOpacity
+          onPress={handleLogout}
+          className="bg-red-500 p-4 rounded-lg items-center flex-row justify-center"
+        >
+          <MaterialIcons name="logout" size={24} color="#fff" className="mr-2" />
+          <Text className="text-white font-bold text-lg">Logout</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }

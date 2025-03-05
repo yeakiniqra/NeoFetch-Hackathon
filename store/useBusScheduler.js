@@ -27,7 +27,7 @@ const useBusSchedulerStore = create((set, get) => ({
       content: "All buses will operate on a reduced schedule during the upcoming holiday."
     }
   ],
-  mapboxToken: "pk.eyJ1IjoiaXFyYXJ0eiIsImEiOiJjbTFlaW15MHAyenF1MmtwdWpyMG15dTk3In0.K3KP0ZbtsG1M5w7dH5dZhA",
+  mapboxToken: process.env.APIKEY_MAPBOX,
 
   // Actions
   saveRoutePreference: async (routeId) => {

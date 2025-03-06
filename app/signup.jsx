@@ -81,13 +81,12 @@ export default function Signup() {
         <View className="flex-1 items-center justify-center px-6 py-10">
           {/* App Logo */}
           <View className="my-8 items-center">
-            <View className="w-24 h-24 rounded-full items-center justify-center mb-3">
+            <View className="w-64 h-32 items-center justify-center mb-3">
               <Image 
                 source={require('../assets/images/splash-icon.png')} 
-                style={{ width: 60, height: 60 }}
+                style={{ width: 200, height: 100 }}
               />
             </View>
-            <Text className="text-4xl font-bold text-slate-800">UAPedia</Text>
             <Text className="text-xl text-slate-500 mt-1">Create your account</Text>
           </View>
 

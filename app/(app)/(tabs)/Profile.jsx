@@ -19,7 +19,6 @@ export default function SettingsScreen() {
 
   const menuItems = [
     { label: 'View Profile', icon: 'person-outline', route: 'profile/UserProfile' },
-    { label: 'Campus Navigation', icon: 'map', route: '/campus-navigation' },
     { label: 'Order History', icon: 'history', route: 'cafe/OrderHistory' },
     { label: 'Emergency', icon: 'emergency', route: '/Emergency' },
     { label: 'About the App', icon: 'info-outline', route: '/About' },

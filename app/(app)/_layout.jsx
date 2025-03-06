@@ -23,11 +23,37 @@ export default function _layout() {
                     headerShown: true
                 }}
             />
-            <Stack.Screen name="Cafeteria"
+            <Stack.Screen name="cafe/Cafeteria"
                 options={{
-                    headerShown: true
+                    headerShown: true,
+                    title: 'Campus Cafeteria'
                 }}
             />
+            <Stack.Screen name="profile/UserProfile"
+                options={{
+                    headerShown: true,
+                    title: 'User Profile'
+                }}
+            />
+            <Stack.Screen name="cafe/OrderHistory"
+                options={{
+                    headerShown: true,
+                    title: 'Order History'
+                }}
+            />
+            <Stack.Screen name="Emergency"
+                options={{
+                    headerShown: true,
+                    title: 'Emergency Contacts'
+                }}
+            />
+             <Stack.Screen name="EventDetails"
+                options={{
+                    headerShown: false,
+                }}
+            />
+
         </Stack>
+
     )
 }

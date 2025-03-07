@@ -62,6 +62,10 @@ Features Implemented
 
 - Update user profile details, including preferences and notification settings.
 
+✅ AI Chatbot
+
+- Using Frequentry Ask Question AI Chatbot can provide details information about University.
+
 
 ## Features Aligns with the Problem Statement
 
@@ -73,6 +77,7 @@ Features Implemented
 | Assignment & Exam Reminders    | ✅ Yes |
 | Event & Club Management   | ✅ Yes |
 | Campus Navigation & AR Map  | ❌ No (Skipped) |
+| AI Chatbot   | ✅ Yes |
 
 ## Tech Stack
 

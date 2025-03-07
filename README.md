@@ -66,6 +66,9 @@ Features Implemented
 
 - Using Frequentry Ask Question AI Chatbot can provide details information about University.
 
+✅ Report
+- Allow students to report lost items and security concerns.
+
 
 ## Features Aligns with the Problem Statement
 
@@ -78,6 +81,7 @@ Features Implemented
 | Event & Club Management   | ✅ Yes |
 | Campus Navigation & AR Map  | ❌ No (Skipped) |
 | AI Chatbot   | ✅ Yes |
+| Report lost items and security concerns   | ✅ Yes |
 
 ## Tech Stack
 
